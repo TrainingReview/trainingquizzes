@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higher Order Thinking Skills Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .explanation {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Higher Order Thinking Skills Quiz</h1>
+    <div id="quiz"></div>
+    <button id="submit">Submit Quiz</button>
+    <button id="retake" style="display: none;">Retake Quiz</button>
+    <div id="results"></div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is higher order thinking?",
+                options: [
+                    "Memorizing facts",
+                    "Engaging in deep processing of information",
+                    "Following instructions",
+                    "Repeating learned concepts"
+                ],
+                correctAnswer: 1,
+                explanation: "Higher order thinking is when an individual engages in deep processing of information. According to the workshop content, 'It is when an individual engages in deep processing of information.'"
+            },
+            {
+                question: "Which of the following is NOT mentioned as a benefit of higher order thinking for students?",
+                options: [
+                    "Becoming independent thinkers",
+                    "Solving problems on their own",
+                    "Improving memorization skills",
+                    "Becoming more innovative and creative"
+                ],
+                correctAnswer: 2,
+                explanation: "Improving memorization skills is not mentioned as a benefit of higher order thinking. The workshop content states that higher order thinking allows students to 'participate in advanced learning, become independent thinkers and solve problems on their own,' 'connect information in meaningful ways,' and 'become more innovative and creative.'"
+            },
+            {
+                question: "What is Bloom's Taxonomy used for in education?",
+                options: [
+                    "To classify students",
+                    "To design school buildings",
+                    "To classify educational objectives into levels of cognitive complexity",
+                    "To determine teacher salaries"
+                ],
+                correctAnswer: 2,
+                explanation: "Bloom's Taxonomy is used to classify educational objectives into levels of cognitive complexity. The workshop content explains that it 'classifies educational objectives into six levels of cognitive complexity.'"
+            },
+            {
+                question: "How can teachers apply Bloom's Taxonomy in their daily classroom practice?",
+                options: [
+                    "By focusing only on lower order thinking skills",
+                    "By ignoring it completely",
+                    "By developing lesson plans that go up and over the line between lower and higher order thinking",
+                    "By using it only for exams"
+                ],
+                correctAnswer: 2,
+                explanation: "Teachers can apply Bloom's Taxonomy by developing lesson plans that go up and over the line between lower and higher order thinking. The workshop content states, 'This helps us purposefully develop lesson plans that go UP and over the line.'"
+            },
+            {
+                question: "Which of the following is an example of an instructional strategy for higher order thinking?",
+                options: [
+                    "Lectures",
+                    "Giving examples",
+                    "Writing tasks",
+                    "Case studies"
+                ],
+                correctAnswer: 3,
+                explanation: "Case studies are an example of an instructional strategy for higher order thinking. The workshop content lists 'case studies' under the 'Higher Order Thinking' section of instructional strategies."
+            }
+        ];
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            quizContainer.innerHTML = '';
+            quizData.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.innerHTML = `
+                    <h3>Question ${index + 1}: ${q.question}</h3>
+                    ${q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="q${index}" value="${i}">
+                            ${option}
+                        </label><br>
+                    `).join('')}
+                    <div class="explanation" id="exp${index}">${q.explanation}</div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const explanation = document.getElementById(`exp${index}`);
+                explanation.style.display = 'block';
+
+                if (selected) {
+                    if (parseInt(selected.value) === q.correctAnswer) {
+                        score++;
+                        selected.parentNode.classList.add('correct');
+                    } else {
+                        selected.parentNode.classList.add('incorrect');
+                        const correctLabel = document.querySelector(`input[name="q${index}"][value="${q.correctAnswer}"]`).parentNode;
+                        correctLabel.classList.add('correct');
+                    }
+                } else {
+                    const correctLabel = document.querySelector(`input[name="q${index}"][value="${q.correctAnswer}"]`).parentNode;
+                    correctLabel.classList.add('correct');
+                }
+            });
+            const results = document.getElementById('results');
+            results.innerHTML = `You scored ${score} out of ${quizData.length}`;
+            
+            document.getElementById('submit').style.display = 'none';
+            document.getElementById('retake').style.display = 'inline-block';
+        }
+
+        function retakeQuiz() {
+            renderQuiz();
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('submit').style.display = 'inline-block';
+            document.getElementById('retake').style.display = 'none';
+        }
+
+        renderQuiz();
+        document.getElementById('submit').addEventListener('click', submitQuiz);
+        document.getElementById('retake').addEventListener('click', retakeQuiz);
+    </script>
+</body>
+</html>
